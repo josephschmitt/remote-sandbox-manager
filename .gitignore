@@ -1,0 +1,12 @@
+.DS_Store
+
+# Go build artifacts
+/track-c/track-c
+/track-c/agentmgr
+/track-d/track-d
+/track-d/agentmgr
+*.test
+*.out
+
+# Claude Code worktrees / local state
+.claude/worktrees/
