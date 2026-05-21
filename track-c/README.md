@@ -10,6 +10,20 @@ This track is one of two parallel implementations being compared. Track D
 `backend.Backend` seam (`backend/backend.go`) so a renderer could later be
 swapped onto either backend.
 
+## Toolchain (devbox)
+
+The Go toolchain is pinned via [devbox](https://www.jetify.com/devbox) so
+the build is reproducible. `devbox.json` declares `go@1.25` (matching the
+`go` directive in `go.mod`); everything below assumes you either prefix
+commands with `devbox run --` or drop into a `devbox shell` first.
+
+```sh
+cd track-c
+devbox shell               # one-time: drops you into a shell with go@1.25
+# ...or prefix individual commands:
+devbox run -- go version
+```
+
 ## Demo path (mock, no Crafting access needed)
 
 The mock backend ships fake sessions across three pretend sandboxes and a
@@ -18,8 +32,8 @@ real to watch.
 
 ```sh
 cd track-c
-go build -o agentmgr .
-./scripts/launch.sh         # opens tmux on its own -L agentmgr socket
+devbox run -- go build -o agentmgr .
+devbox run -- ./scripts/launch.sh   # opens tmux on its own -L agentmgr socket
 ```
 
 Inside the tmux layout:
@@ -54,7 +68,7 @@ attaches to the existing agentmgr server if one is up.
 ## Running against real Crafting
 
 ```sh
-./scripts/launch.sh --real   # uses backend.CraftingBackend
+devbox run -- ./scripts/launch.sh --real   # uses backend.CraftingBackend
 ```
 
 This shells out to `cs` and `claude`:
@@ -146,8 +160,10 @@ $ ./agentmgr roster
 ## Build & verify
 
 ```sh
-go build ./...      # everything compiles
-go vet ./...        # vet clean
-./agentmgr roster   # mock backend wires up; six sessions appear
-./scripts/launch.sh # full tmux demo (run in a real terminal)
+devbox run -- go build ./...      # everything compiles
+devbox run -- go vet ./...        # vet clean
+devbox run -- ./agentmgr roster   # mock backend wires up; six sessions appear
+devbox run -- ./scripts/launch.sh # full tmux demo (run in a real terminal)
 ```
+
+Inside a `devbox shell` you can drop the `devbox run --` prefix.
