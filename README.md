@@ -55,6 +55,15 @@ the same command through a local PTY into an embedded `bubbleterm` widget.
 
 ## Status: two implementations under comparison
 
+Earlier sketches (tracks A and B) ran tmux inside each Crafting sandbox to
+multiplex multiple Claude agents per machine — we'd have built our own
+per-sandbox supervisor on top of tmux/dtach. Claude Code then shipped its
+own built-in agents manager (`claude agents`), so every machine now has a
+per-user supervisor for free. The C and D variants here bet on that built-in
+supervisor and only add the cross-sandbox aggregation layer; if the bet pays
+off, A and B never need to ship. The letters stuck around as a tag — there
+just isn't an A or B in the tree.
+
 Both share an identical `Backend` interface and `MockBackend`, and a Bubble
 Tea v2 sidebar. They differ in exactly one layer: how the selected session is
 rendered locally.
