@@ -18,34 +18,38 @@ sandboxes, this manager polls each one's roster, flattens every session into
 one list keyed by `(sandbox, session-id)`, and attaches on selection. No
 dtach, no per-agent sockets, no session-id bookkeeping of our own.
 
-## How it fits together
+## What it looks like
+
+A best-effort render of the manager attached to a session, with the
+`MockBackend` roster across three sandboxes:
 
 ```
-+----- local machine -----------------------------------+
-|                                                       |
-|  +----------+  +-----------------------------------+  |
-|  | sidebar  |  | content pane                      |  |
-|  | flat     |  | attached session                  |  |
-|  | list of  |  | (cs ssh -t <sb> -- claude attach) |  |
-|  | every    |  |                                   |  |
-|  | session  |  |                                   |  |
-|  +----------+  +-----------------------------------+  |
-|                                                       |
-|  aggregator polls per-sandbox claude agents --json    |
-+-------------------------------------------------------+
-                            |
-                            | poll
-                            v
-  +----- sandbox A --------+  +----- sandbox B --------+
-  | claude supervisor      |  | claude supervisor      |
-  |  - session 1 working   |  |  - session 4 idle      |
-  |  - session 2 input?    |  |  - session 5 done      |
-  |  - session 3 idle      |  |                        |
-  +------------------------+  +------------------------+
+╭──────────────────────────────┬───────────────────────────────────────────────╮
+│                              │                                               │
+│   sb-alpha                   │ sb-alpha/refactor-auth · ~/repo               │
+│                              │                                               │
+│ ▶ ● refactor-auth       42s  │ ● refactoring auth middleware                 │
+│      draft #142              │                                               │
+│   ◆ fix-flaky-test       5m  │ > Read src/auth/middleware.go                 │
+│   ○ audit-deps          12m  │   ⎿  read 238 lines                           │
+│                              │                                               │
+│   sb-bravo                   │ > Edit src/auth/middleware.go                 │
+│                              │   ⎿  applied 3 edits                          │
+│   ● ingest-pipeline     18s  │                                               │
+│      open #87                │ > Bash go test ./auth/...                     │
+│   ✓ doc-pass            47m  │   ⎿  PASS: 12 tests in 0.42s                  │
+│                              │                                               │
+│   sb-charlie                 │                                               │
+│                              │ ╭───────────────────────────────────────────╮ │
+│   ✗ spike-tracing       31m  │ │ > _                                       │ │
+│                              │ ╰───────────────────────────────────────────╯ │
+╰──────────────────────────────┴───────────────────────────────────────────────╯
 ```
 
-The sidebar (Bubble Tea v2) is identical in both tracks. The content pane is
-the layer under comparison: Track C respawns a tmux pane to
+The left sidebar groups every Claude background session by sandbox, with
+state markers (● working, ◆ needs input, ○ idle, ✓ completed, ✗ failed) and
+optional PR badges. The selected row (▶) drives the right pane — that pane
+is where the two tracks differ: Track C respawns a tmux pane to
 `cs ssh -t <sb> -- claude attach <id>`; Track D drives the same command
 through a local PTY into an embedded `bubbleterm` widget.
 
