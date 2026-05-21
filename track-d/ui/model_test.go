@@ -222,8 +222,8 @@ func TestView_Renders_Without_Panic(t *testing.T) {
 		t.Fatal("View() returned empty content")
 	}
 	// At least one mock sandbox name should appear in the rendered body.
-	if !strings.Contains(v.Content, "sb-alpha") {
-		t.Fatal("expected sb-alpha to appear in the rendered sidebar")
+	if !strings.Contains(v.Content, "payments-api") {
+		t.Fatal("expected payments-api to appear in the rendered sidebar")
 	}
 }
 
