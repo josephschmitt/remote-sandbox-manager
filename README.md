@@ -18,6 +18,37 @@ sandboxes, this manager polls each one's roster, flattens every session into
 one list keyed by `(sandbox, session-id)`, and attaches on selection. No
 dtach, no per-agent sockets, no session-id bookkeeping of our own.
 
+## How it fits together
+
+```
++----- local machine -----------------------------------+
+|                                                       |
+|  +----------+  +-----------------------------------+  |
+|  | sidebar  |  | content pane                      |  |
+|  | flat     |  | attached session                  |  |
+|  | list of  |  | (cs ssh -t <sb> -- claude attach) |  |
+|  | every    |  |                                   |  |
+|  | session  |  |                                   |  |
+|  +----------+  +-----------------------------------+  |
+|                                                       |
+|  aggregator polls per-sandbox claude agents --json    |
++-------------------------------------------------------+
+                            |
+                            | poll
+                            v
+  +----- sandbox A --------+  +----- sandbox B --------+
+  | claude supervisor      |  | claude supervisor      |
+  |  - session 1 working   |  |  - session 4 idle      |
+  |  - session 2 input?    |  |  - session 5 done      |
+  |  - session 3 idle      |  |                        |
+  +------------------------+  +------------------------+
+```
+
+The sidebar (Bubble Tea v2) is identical in both tracks. The content pane is
+the layer under comparison: Track C respawns a tmux pane to
+`cs ssh -t <sb> -- claude attach <id>`; Track D drives the same command
+through a local PTY into an embedded `bubbleterm` widget.
+
 ## Status: two implementations under comparison
 
 Both share an identical `Backend` interface and `MockBackend`, and a Bubble
@@ -48,14 +79,14 @@ Full design lives in [`specs/`](specs/):
 
 ```
 .
-├── README.md                  (this file)
-├── specs/                     full design docs
-└── track-{c,d}/               on the respective branches
-    ├── backend/               shared seam: Backend interface + MockBackend
-    ├── …                      track-specific renderer
-    ├── README.md              how to run that track
-    ├── VERIFY.md              live-infra checklist
-    └── NOTES.md               what's stubbed, decisions made
+|-- README.md                  (this file)
+|-- specs/                     full design docs
+`-- track-{c,d}/               on the respective branches
+    |-- backend/               shared seam: Backend interface + MockBackend
+    |-- ...                    track-specific renderer
+    |-- README.md              how to run that track
+    |-- VERIFY.md              live-infra checklist
+    `-- NOTES.md               what's stubbed, decisions made
 ```
 
 The shared seed commit on `main` contains the `Backend` interface and
