@@ -31,13 +31,13 @@ A best-effort render of the manager attached to a session, with the
 │ ▶ ● refactor-auth       42s  │ ● refactoring auth middleware                 │
 │      draft #142              │                                               │
 │   ◆ fix-flaky-test       5m  │ > Read src/auth/middleware.go                 │
-│   ○ audit-deps          12m  │   ⎿  read 238 lines                           │
+│   ○ audit-deps          12m  │   └  read 238 lines                           │
 │                              │                                               │
 │   sb-bravo                   │ > Edit src/auth/middleware.go                 │
-│                              │   ⎿  applied 3 edits                          │
+│                              │   └  applied 3 edits                          │
 │   ● ingest-pipeline     18s  │                                               │
 │      open #87                │ > Bash go test ./auth/...                     │
-│   ✓ doc-pass            47m  │   ⎿  PASS: 12 tests in 0.42s                  │
+│   ✓ doc-pass            47m  │   └  PASS: 12 tests in 0.42s                  │
 │                              │                                               │
 │   sb-charlie                 │                                               │
 │                              │ ╭───────────────────────────────────────────╮ │
