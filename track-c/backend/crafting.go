@@ -17,9 +17,9 @@ import (
 // `claude agents --json` is not yet finalized, so the parsing is best-
 // effort and flagged as STUB in NOTES.md.
 //
-// Track C uses Attach() only on the rare paths that want to consume the
-// stream in-process (e.g. for tests). The normal sidebar flow respawns a
-// tmux pane to `cs ssh -t <sandbox> -- claude attach <id>` directly, so
+// This variant uses Attach() only on the rare paths that want to consume
+// the stream in-process (e.g. for tests). The normal sidebar flow respawns
+// a tmux pane to `cs ssh -t <sandbox> -- claude attach <id>` directly, so
 // Attach() here is provided for interface completeness rather than the
 // hot path.
 type CraftingBackend struct {
@@ -164,12 +164,12 @@ func (c *CraftingBackend) pollSandbox(ctx context.Context, sandbox string) ([]Se
 	return res, nil
 }
 
-// Attach is supplied for interface parity. Track C's normal path runs
-// `cs ssh -t … claude attach <id>` directly inside a tmux pane and
+// Attach is supplied for interface parity. The tmux variant's normal path
+// runs `cs ssh -t … claude attach <id>` directly inside a tmux pane and
 // never calls this. The implementation here is a STUB: a PTY-backed
 // version belongs in a follow-up if we ever need in-process attach.
 func (c *CraftingBackend) Attach(ctx context.Context, sandbox, id string) (io.ReadWriteCloser, error) {
-	return nil, errors.New("CraftingBackend.Attach: STUB — Track C attaches via tmux respawn-pane, not in-process. See NOTES.md")
+	return nil, errors.New("CraftingBackend.Attach: STUB — the tmux variant attaches via tmux respawn-pane, not in-process. See NOTES.md")
 }
 
 func (c *CraftingBackend) Dispatch(ctx context.Context, sandbox, name, prompt string) (string, error) {

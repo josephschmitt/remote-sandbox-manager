@@ -1,4 +1,4 @@
-# VERIFY.md — track-c real-infra checklist
+# VERIFY.md — tmux variant real-infra checklist
 
 The build session ran against the mock only; the items below are the
 assumptions baked into `backend/crafting.go` and the launcher that need a

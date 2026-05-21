@@ -1,4 +1,4 @@
-// Track C — Cross-Sandbox Agent Aggregator (agent view + tmux layout).
+// Cross-Sandbox Agent Aggregator — tmux variant (agent view + tmux layout).
 //
 // One binary, several roles, dispatched on the first positional argument:
 //

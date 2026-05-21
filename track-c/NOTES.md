@@ -1,4 +1,4 @@
-# NOTES.md — track-c POC build session
+# NOTES.md — tmux variant POC build session
 
 What's done, what's stubbed, and what a reviewer should know before judging.
 
@@ -10,8 +10,8 @@ Against `MockBackend`, with no Crafting access:
    custom `agentmgr.conf`, then opens one session "mgr" with one window
    "main" split horizontally: sidebar in pane 0, placeholder in pane 1.
 2. The sidebar (Bubble Tea v2, in pane 0) renders six fake sessions
-   grouped by sandbox (`sb-alpha`, `sb-bravo`, `sb-charlie`) with per-row
-   state markers and ages that drift forward between polls.
+   grouped by sandbox (`payments-api`, `analytics-ingest`, `observability`)
+   with per-row state markers and ages that drift forward between polls.
 3. `j`/`k`/`g`/`G` move the cursor. `Enter` on a row triggers
    `tmux new-window` with the content window running
    `agentmgr attach --mock <sb> <id>`, which streams the MockBackend's
@@ -48,12 +48,13 @@ sandbox to confirm — see VERIFY.md for the exact commands. In summary:
   silently zero out — `last_activity` falls through to a 0 age, etc.
 - The `state != "running"` sandbox filter assumes `cs list --json` uses
   literal `"running"`. Adjust if Crafting uses different state strings.
-- `CraftingBackend.Attach` is a **STUB** that returns an error. Track C
-  attaches via tmux respawn-pane and the `attach --real` subcommand
-  (which execs `cs ssh -t <sb> -- claude attach <id>` directly), so the
-  in-process `Attach` is never called on the hot path. The interface is
-  still implemented for parity with track-d. If something later wants
-  in-process attach (tests, inline preview, etc.), implement it then.
+- `CraftingBackend.Attach` is a **STUB** that returns an error. The tmux
+  variant attaches via tmux respawn-pane and the `attach --real`
+  subcommand (which execs `cs ssh -t <sb> -- claude attach <id>` directly),
+  so the in-process `Attach` is never called on the hot path. The
+  interface is still implemented for parity with the bubbleterm variant.
+  If something later wants in-process attach (tests, inline preview,
+  etc.), implement it then.
 - `Dispatch` parses the session id naively as "last whitespace token of
   stdout"; the real `claude --bg` output format is unverified.
 - No caching of last-known rosters for suspended sandboxes; we just elide
@@ -92,12 +93,13 @@ opening a textinput is all that's missing.
    Note the import path moved from `github.com/charmbracelet/bubbletea/v2`
    to `charm.land/bubbletea/v2`; the v2 `Model` interface changed too
    (`Init()` returns just `Cmd`, `View()` returns `tea.View` rather than
-   `string`). Track D will hit the same wall; we agreed on the seam
-   ahead of time so this divergence shouldn't bite the comparison.
+   `string`). The bubbleterm variant will hit the same wall; we agreed
+   on the seam ahead of time so this divergence shouldn't bite the
+   comparison.
 
 3. **Window-name separator is `~`, not `/` or `.`**. tmux's target
    parser treats `:` and `.` as session/window/pane separators, and `/`
-   tripped target lookup in testing (windows named `sb-alpha/j7K2`
+   tripped target lookup in testing (windows named `payments-api/j7K2`
    couldn't be re-selected after creation). `~` is unambiguous and
    visually distinct.
 
@@ -121,8 +123,8 @@ opening a textinput is all that's missing.
 
 - **Bubble Tea v2 `Init` semantics.** I expected the docs' older shape
   (`Init() (tea.Model, tea.Cmd)`) — the stable v2 release returns just
-  `tea.Cmd`. Worth verifying track D landed on the same shape so the
-  apples-to-apples isn't accidentally apples-to-pears.
+  `tea.Cmd`. Worth verifying the bubbleterm variant landed on the same
+  shape so the apples-to-apples isn't accidentally apples-to-pears.
 - **tmux `aggressive-resize on` vs alt-screen Bubble Tea programs.**
   Bubble Tea v2 sets alt-screen via `tea.View{AltScreen: true}` per
   render. With `aggressive-resize on`, an inactive sidebar window's
@@ -137,14 +139,16 @@ opening a textinput is all that's missing.
 ## What a reviewer should look at first
 
 1. `internal/sidebar/sidebar.go` — the actual Bubble Tea program. The
-   `Update` and `View` methods are the comparable surface against track-d.
+   `Update` and `View` methods are the comparable surface against the
+   bubbleterm variant.
 2. `internal/tmuxctl/tmuxctl.go` — every tmux command the sidebar fires.
    This is the bulk of the "tmux is plumbing" claim. Note it's ~80 LOC.
 3. `scripts/launch.sh` + `scripts/agentmgr.conf` — the whole tmux setup.
-   17 lines of config and ~40 of bash. Compare against track-d's
-   equivalent (which has no chrome surface — bubbleterm is doing it).
-4. `backend/crafting.go` — the live backend shape. Compare against
-   track-d's; should be near-identical except for whether Attach is
-   stubbed (it is, for track C, on purpose).
+   17 lines of config and ~40 of bash. Compare against the bubbleterm
+   variant's equivalent (which has no chrome surface — bubbleterm is
+   doing it).
+4. `backend/crafting.go` — the live backend shape. Compare against the
+   bubbleterm variant's; should be near-identical except for whether
+   Attach is stubbed (it is, here, on purpose).
 5. The DoD smoke test in VERIFY.md item 5 (switch+resize) — that's the
    thing this POC most directly demonstrates.

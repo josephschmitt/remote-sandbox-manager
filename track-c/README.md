@@ -1,25 +1,25 @@
-# agentmgr (track C) — tmux-layout cross-sandbox agent manager
+# agentmgr — the tmux variant of the cross-sandbox agent manager
 
-A POC of the spec-C variant: tmux as an invisible layout engine, a Bubble Tea
-v2 sidebar in the left pane, and the attached Claude Code session running in
-the right pane(s). The cross-sandbox aggregator lives in the sidebar; tmux
+A POC of the tmux-layout variant: tmux as an invisible layout engine, a Bubble
+Tea v2 sidebar in the left pane, and the attached Claude Code session running
+in the right pane(s). The cross-sandbox aggregator lives in the sidebar; tmux
 owns the chrome (focus, switching, resize propagation).
 
-This track is one of two parallel implementations being compared. Track D
-(native bubbleterm) lives in `../track-d/`. The two share an identical
-`backend.Backend` seam (`backend/backend.go`) so a renderer could later be
-swapped onto either backend.
+This is one of two parallel implementations being compared. The bubbleterm
+variant lives in `../track-d/`. The two share an identical `backend.Backend`
+seam (`backend/backend.go`) so a renderer could later be swapped onto either
+backend.
 
 ## Toolchain (devbox)
 
 The Go toolchain is pinned via [devbox](https://www.jetify.com/devbox) so
-the build is reproducible. `devbox.json` declares `go@1.25` (matching the
+the build is reproducible. `devbox.json` declares `go@1.26` (matching the
 `go` directive in `go.mod`); everything below assumes you either prefix
 commands with `devbox run --` or drop into a `devbox shell` first.
 
 ```sh
 cd track-c
-devbox shell               # one-time: drops you into a shell with go@1.25
+devbox shell               # one-time: drops you into a shell with go@1.26
 # ...or prefix individual commands:
 devbox run -- go version
 ```
@@ -95,10 +95,10 @@ JSON shapes — see `NOTES.md` for the list and `VERIFY.md` for the checklist.
 │ │   across mock  │                                                  ││
 │ │   sandboxes    │                                                  ││
 │ └────────────────┴──────────────────────────────────────────────────┘│
-│ window "sb-alpha~j7K2"  (created on first Enter)                     │
-│   single pane running `agentmgr attach --mock sb-alpha j7K2`         │
-│ window "sb-bravo~k8M1"  (created on Enter for that row)              │
-│   single pane running `agentmgr attach --mock sb-bravo k8M1`         │
+│ window "payments-api~j7K2"  (created on first Enter)                 │
+│   single pane running `agentmgr attach --mock payments-api j7K2`     │
+│ window "analytics-ingest~k8M1"  (created on Enter for that row)      │
+│   single pane running `agentmgr attach --mock analytics-ingest k8M1` │
 │ ...                                                                  │
 └──────────────────────────────────────────────────────────────────────┘
 ```
@@ -149,12 +149,12 @@ works:
 ```sh
 $ ./agentmgr roster
 6 sessions:
-  sb-alpha      j7K2    refactor-auth           working       draft #142
-  sb-alpha      p3Q9    fix-flaky-test          needs-input
-  sb-alpha      x1B4    audit-deps              idle
-  sb-bravo      k8M1    ingest-pipeline         working       open #87
-  sb-bravo      z5N7    doc-pass                completed     merged #84
-  sb-charlie    v2R6    spike-tracing           failed
+  payments-api  j7K2    refactor-auth           working       draft #142
+  payments-api  p3Q9    fix-flaky-test          needs-input
+  payments-api  x1B4    audit-deps              idle
+  analytics-ingest  k8M1    ingest-pipeline         working       open #87
+  analytics-ingest  z5N7    doc-pass                completed     merged #84
+  observability  v2R6    spike-tracing           failed
 ```
 
 ## Build & verify

@@ -1,7 +1,7 @@
 // Package tmuxctl wraps the `tmux -L agentmgr` commands the sidebar fires
 // when the user selects, switches between, or closes session views.
 //
-// Track C uses tmux as an invisible layout engine: one window per attached
+// This variant uses tmux as an invisible layout engine: one window per attached
 // session lets the user switch between them without losing each one's
 // terminal state, which is what the DoD "switch without losing state"
 // requirement needs. The sidebar always lives in window 0 ("main"); each
