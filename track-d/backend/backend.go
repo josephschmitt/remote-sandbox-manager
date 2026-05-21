@@ -36,10 +36,10 @@ type Backend interface {
 	// session. Closing the stream detaches but leaves the session
 	// running in the supervisor.
 	//
-	// Track C consumes this differently: it respawns a tmux pane to
-	// `cs ssh -t <sandbox> -- claude attach <id>` rather than reading
-	// the stream itself, but the interface is identical so the seam is
-	// still swappable.
+	// The tmux variant consumes this differently: it respawns a tmux
+	// pane to `cs ssh -t <sandbox> -- claude attach <id>` rather than
+	// reading the stream itself, but the interface is identical so the
+	// seam is still swappable.
 	Attach(ctx context.Context, sandbox, id string) (io.ReadWriteCloser, error)
 
 	// Dispatch starts a new background session in the given sandbox and
