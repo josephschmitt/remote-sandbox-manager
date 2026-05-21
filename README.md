@@ -79,14 +79,14 @@ Full design lives in [`specs/`](specs/):
 
 ```
 .
-|-- README.md                  (this file)
-|-- specs/                     full design docs
-`-- track-{c,d}/               on the respective branches
-    |-- backend/               shared seam: Backend interface + MockBackend
-    |-- ...                    track-specific renderer
-    |-- README.md              how to run that track
-    |-- VERIFY.md              live-infra checklist
-    `-- NOTES.md               what's stubbed, decisions made
+├── README.md                  (this file)
+├── specs/                     full design docs
+└── track-{c,d}/               on the respective branches
+    ├── backend/               shared seam: Backend interface + MockBackend
+    ├── …                      track-specific renderer
+    ├── README.md              how to run that track
+    ├── VERIFY.md              live-infra checklist
+    └── NOTES.md               what's stubbed, decisions made
 ```
 
 The shared seed commit on `main` contains the `Backend` interface and
