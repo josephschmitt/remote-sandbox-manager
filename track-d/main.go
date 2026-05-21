@@ -1,4 +1,4 @@
-// Track D — Cross-Sandbox Agent Aggregator (agent view + bubbleterm).
+// Cross-Sandbox Agent Aggregator — bubbleterm variant (agent view + native).
 //
 // Single Go binary that aggregates Claude Code background sessions
 // across multiple Crafting sandboxes into one flat list and lets you

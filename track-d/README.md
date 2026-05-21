@@ -1,4 +1,4 @@
-# agentmgr — Track D (bubbleterm)
+# agentmgr — the bubbleterm variant
 
 Cross-sandbox Claude agent manager. Single Go binary that aggregates
 Claude Code background sessions across every Crafting sandbox into one
@@ -44,8 +44,8 @@ go run .
 ```
 
 You should see a sidebar with six fake sessions across three pretend
-sandboxes (`sb-alpha`, `sb-bravo`, `sb-charlie`), with per-row state
-markers. Keys:
+sandboxes (`payments-api`, `analytics-ingest`, `observability`), with
+per-row state markers. Keys:
 
   - `↑`/`↓` or `k`/`j` — move the selection
   - `enter` — attach the highlighted session (lazy; you'll see a

@@ -1,4 +1,4 @@
-# NOTES — Track D build session
+# NOTES — bubbleterm variant build session
 
 ## Fidelity spike outcome
 

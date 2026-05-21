@@ -1,4 +1,4 @@
-# VERIFY — Track D real-infra checklist
+# VERIFY — bubbleterm variant real-infra checklist
 
 What this build cannot test from a background agent session. Run these
 against a real Crafting workspace with `cs` and `claude` on PATH
