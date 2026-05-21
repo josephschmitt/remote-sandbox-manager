@@ -28,9 +28,18 @@ track-d/
   README.md  VERIFY.md  NOTES.md
 ```
 
+## Toolchain
+
+Go is pinned via [devbox](https://www.jetify.com/devbox). `devbox.json`
+declares `go@1.26`, which matches the version in `go.mod`. Everything
+below assumes you either prefix commands with `devbox run --` or open a
+`devbox shell` first; a system Go on the right minor will also work.
+
 ## Running against the mock (the demo path)
 
 ```sh
+devbox run -- go run .
+# or, inside `devbox shell`:
 go run .
 ```
 
@@ -51,9 +60,9 @@ which is one of the Definition-of-Done requirements.
 ## Running against the real Crafting backend
 
 ```sh
-go run . --real
+devbox run -- go run . --real
 # or
-AGENTMGR_BACKEND=crafting go run .
+AGENTMGR_BACKEND=crafting devbox run -- go run .
 ```
 
 This expects `cs` and `claude` on PATH. The backend is partly stubbed
@@ -64,7 +73,7 @@ run before trusting it. The mock is the recommended demo path.
 ## Tests
 
 ```sh
-go test ./...
+devbox run -- go test ./...
 ```
 
 Tests cover roster aggregation, navigation, attach, focus toggle,
@@ -76,14 +85,14 @@ TTY so they're safe in CI.
 Interactive (needs a TTY):
 
 ```sh
-go run ./cmd/spike            # runs bash through bubbleterm
-go run ./cmd/spike vim        # alt-screen + cursor + scroll
+devbox run -- go run ./cmd/spike            # runs bash through bubbleterm
+devbox run -- go run ./cmd/spike vim        # alt-screen + cursor + scroll
 ```
 
 Headless (no TTY needed):
 
 ```sh
-go run ./cmd/spike-headless
+devbox run -- go run ./cmd/spike-headless
 ```
 
 The headless run feeds a representative ANSI stream (alt-screen, SGR
