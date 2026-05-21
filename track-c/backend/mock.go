@@ -25,12 +25,12 @@ func NewMockBackend() *MockBackend {
 	now := time.Now()
 	m := &MockBackend{started: now}
 	m.sessions = []Session{
-		{Sandbox: "sb-alpha", ID: "j7K2", Name: "refactor-auth", State: StateWorking, PR: "draft #142", Age: 42 * time.Second},
-		{Sandbox: "sb-alpha", ID: "p3Q9", Name: "fix-flaky-test", State: StateNeedsInput, Age: 5 * time.Minute},
-		{Sandbox: "sb-alpha", ID: "x1B4", Name: "audit-deps", State: StateIdle, Age: 12 * time.Minute},
-		{Sandbox: "sb-bravo", ID: "k8M1", Name: "ingest-pipeline", State: StateWorking, PR: "open #87", Age: 18 * time.Second},
-		{Sandbox: "sb-bravo", ID: "z5N7", Name: "doc-pass", State: StateCompleted, PR: "merged #84", Age: 47 * time.Minute},
-		{Sandbox: "sb-charlie", ID: "v2R6", Name: "spike-tracing", State: StateFailed, Age: 31 * time.Minute},
+		{Sandbox: "payments-api", ID: "j7K2", Name: "refactor-auth", State: StateWorking, PR: "draft #142", Age: 42 * time.Second},
+		{Sandbox: "payments-api", ID: "p3Q9", Name: "fix-flaky-test", State: StateNeedsInput, Age: 5 * time.Minute},
+		{Sandbox: "payments-api", ID: "x1B4", Name: "audit-deps", State: StateIdle, Age: 12 * time.Minute},
+		{Sandbox: "analytics-ingest", ID: "k8M1", Name: "ingest-pipeline", State: StateWorking, PR: "open #87", Age: 18 * time.Second},
+		{Sandbox: "analytics-ingest", ID: "z5N7", Name: "doc-pass", State: StateCompleted, PR: "merged #84", Age: 47 * time.Minute},
+		{Sandbox: "observability", ID: "v2R6", Name: "spike-tracing", State: StateFailed, Age: 31 * time.Minute},
 	}
 	return m
 }

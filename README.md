@@ -26,20 +26,20 @@ A best-effort render of the manager attached to a session, with the
 ```
 ╭──────────────────────────────┬───────────────────────────────────────────────╮
 │                              │                                               │
-│   sb-alpha                   │ sb-alpha/refactor-auth · ~/repo               │
+│   payments-api               │ payments-api/refactor-auth · ~/repo           │
 │                              │                                               │
 │ ▶ ● refactor-auth       42s  │ ● refactoring auth middleware                 │
 │      draft #142              │                                               │
 │   ◆ fix-flaky-test       5m  │ > Read src/auth/middleware.go                 │
 │   ○ audit-deps          12m  │   └  read 238 lines                           │
 │                              │                                               │
-│   sb-bravo                   │ > Edit src/auth/middleware.go                 │
+│   analytics-ingest           │ > Edit src/auth/middleware.go                 │
 │                              │   └  applied 3 edits                          │
 │   ● ingest-pipeline     18s  │                                               │
 │      open #87                │ > Bash go test ./auth/...                     │
 │   ✓ doc-pass            47m  │   └  PASS: 12 tests in 0.42s                  │
 │                              │                                               │
-│   sb-charlie                 │                                               │
+│   observability              │                                               │
 │                              │ ╭───────────────────────────────────────────╮ │
 │   ✗ spike-tracing       31m  │ │ > _                                       │ │
 │                              │ ╰───────────────────────────────────────────╯ │
@@ -49,9 +49,9 @@ A best-effort render of the manager attached to a session, with the
 The left sidebar groups every Claude background session by sandbox, with
 state markers (● working, ◆ needs input, ○ idle, ✓ completed, ✗ failed) and
 optional PR badges. The selected row (▶) drives the right pane — that pane
-is where the two tracks differ: Track C respawns a tmux pane to
-`cs ssh -t <sb> -- claude attach <id>`; Track D drives the same command
-through a local PTY into an embedded `bubbleterm` widget.
+is where the two variants differ: the **tmux** variant respawns a tmux pane
+to `cs ssh -t <sb> -- claude attach <id>`; the **bubbleterm** variant drives
+the same command through a local PTY into an embedded `bubbleterm` widget.
 
 ## Status: two implementations under comparison
 
@@ -59,10 +59,10 @@ Both share an identical `Backend` interface and `MockBackend`, and a Bubble
 Tea v2 sidebar. They differ in exactly one layer: how the selected session is
 rendered locally.
 
-| Track | Renderer | Branch | Code |
+| Variant | Renderer | Branch | Code |
 |---|---|---|---|
-| **C** | tmux as an invisible layout engine | [`track-c-tmux`](https://github.com/josephschmitt/remote-sandbox-manager/tree/track-c-tmux/track-c) | `track-c/` |
-| **D** | single Go binary with an embedded terminal emulator ([`taigrr/bubbleterm`](https://github.com/taigrr/bubbleterm)) | [`track-d-bubbleterm`](https://github.com/josephschmitt/remote-sandbox-manager/tree/track-d-bubbleterm/track-d) | `track-d/` |
+| **tmux** | tmux as an invisible layout engine | [`track-c-tmux`](https://github.com/josephschmitt/remote-sandbox-manager/tree/track-c-tmux/track-c) | `track-c/` |
+| **bubbleterm** | single Go binary with an embedded terminal emulator ([`taigrr/bubbleterm`](https://github.com/taigrr/bubbleterm)) | [`track-d-bubbleterm`](https://github.com/josephschmitt/remote-sandbox-manager/tree/track-d-bubbleterm/track-d) | `track-d/` |
 
 Both build, both run against `MockBackend` with no Crafting access. See each
 branch's `track-*/README.md` for how to demo.
@@ -74,10 +74,10 @@ Full design lives in [`specs/`](specs/):
 - [`build-orchestrator.md`](specs/build-orchestrator.md) — coordination
   layer: shared decisions, the shared `Backend` interface, Definition of Done,
   comparison criteria.
-- [`spec-c-agentview-tmux.md`](specs/spec-c-agentview-tmux.md) — Track C
-  design.
+- [`spec-c-agentview-tmux.md`](specs/spec-c-agentview-tmux.md) — the tmux
+  variant's design.
 - [`spec-d-agentview-bubbleterm.md`](specs/spec-d-agentview-bubbleterm.md) —
-  Track D design.
+  the bubbleterm variant's design.
 
 ## Layout
 
@@ -87,12 +87,12 @@ Full design lives in [`specs/`](specs/):
 ├── specs/                     full design docs
 └── track-{c,d}/               on the respective branches
     ├── backend/               shared seam: Backend interface + MockBackend
-    ├── …                      track-specific renderer
+    ├── …                      variant-specific renderer
     ├── README.md              how to run that track
     ├── VERIFY.md              live-infra checklist
     └── NOTES.md               what's stubbed, decisions made
 ```
 
 The shared seed commit on `main` contains the `Backend` interface and
-`MockBackend` so both tracks start from the same byte-identical seam — that's
-what makes the comparison apples-to-apples.
+`MockBackend` so both variants start from the same byte-identical seam —
+that's what makes the comparison apples-to-apples.
